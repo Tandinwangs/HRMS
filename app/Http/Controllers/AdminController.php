@@ -59,6 +59,7 @@ class AdminController extends Controller
         // $sections = Section::all();
         $sections = Section::paginate(10); // You can adjust the number of items per page
         $departments = Department::all();
+        //ssdds
         return view('admin.add_section', compact('departments','sections'));
     }
     
