@@ -8,16 +8,16 @@
                     <div class="card-header">{{ __('Registration') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="">
+                        <form method="POST" action="{{ route('register.post') }}">
                             @csrf
 
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
 
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name" required autofocus>
+                                    <input id="name" type="text" class="form-control" name="name"  autofocus>
 
-                                    @error('email')
+                                    @error('name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -30,7 +30,7 @@
                                 <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"  autocomplete="email" autofocus>
 
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
@@ -40,78 +40,13 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="head">Department Name:</label>
-                                <select class="form-control" id="department" name="department">
-                                    @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('department_id')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="section">Section Name:</label>
-                                <select class="form-control" id="section" name="section">
-                                    <!-- Options will be dynamically added using JavaScript -->
-                                </select>
-                                @error('section_id')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-
-                            <div class="form-group row  mt-4">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
+                            <div class="form-group row mt-3">
+                                <label for="employee_id" class="col-md-4 col-form-label text-md-right">Employee ID:</label>
 
                                 <div class="col-md-6">
-                                    <select id="user_id" class="form-control" name="role" required>
-                                        <option value="" disabled selected>Select Role</option>
-                                            @foreach ($roles as $role)
-                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                            @endforeach
-                                        </select>
+                                    <input id="employee_id" type="text" class="form-control" name="employee_id"  autofocus>
 
-                                    @error('role')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group row  mt-4">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Designation</label>
-
-                                <div class="col-md-6">
-                                    <select id="user_id" class="form-control" name="designation" required>
-                                        <option value="" disabled selected>Select Designation</option>
-                                            @foreach ($designations as $designation)
-                                            <option value="{{ $designation->id }}">{{ $designation->name }}</option>
-                                            @endforeach
-                                        </select>
-
-                                    @error('designation')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="form-group row  mt-4">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Grade</label>
-
-                                <div class="col-md-6">
-                                    <select id="user_id" class="form-control" name="grade" required>
-                                        <option value="" disabled selected>Select Grade</option>
-                                            @foreach ($grades as $grade)
-                                            <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-                                            @endforeach
-                                        </select>
-
-                                    @error('role')
+                                    @error('employee_id')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -123,7 +58,7 @@
                                 <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                    <input id="cpassword" type="password" class="form-control @error('password') is-invalid @enderror" name="password"  autocomplete="current-password">
 
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
@@ -137,7 +72,7 @@
                                 <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation" required autocomplete="current-password">
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation"  autocomplete="current-password">
 
                                     @error('password_confirmation')
                                         <span class="invalid-feedback" role="alert">

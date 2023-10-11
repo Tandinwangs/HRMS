@@ -17,7 +17,7 @@
             <input type="text" class="form-control" id="name" name="name" required>
             @error('name')
                     <small class="text-danger">{{ $message }}</small>
-                @enderror
+            @enderror
         </div>
 
         <div class="form-group">

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\department;
 use App\Models\section;
-use App\Models\role;
+use Spatie\Permission\Models\Role;
 use App\Models\designation;
 use App\Models\grade;
 use App\Providers\RouteServiceProvider;
@@ -66,29 +66,37 @@ class RegisteredUserController extends Controller
     // }
     public function store(Request $request): RedirectResponse
     {
+        // Validate the request data
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], // Use 'users' table name
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'employee_id' => ['required', 'string', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'department' => ['required', 'exists:departments,id'], // Validate department
-            'section' => ['required', 'exists:sections,id'], // Validate section
-            'role' => ['required', 'exists:roles,id'], // Validate role
-            'designation' => ['required', 'exists:designations,id'],
-            'grade' => ['required', 'exists:grades,id'],
         ]);
 
+        // Check if it's the first user
+        if (User::count() === 0) {
+            // This is the first user, create a super-admin
+            $role = Role::where('name', 'super-admin')->first();
+        } else {
+            // This is not the first user, assign the selected role
+            $role = Role::findOrFail($request->role);
+        }
+
+        // Create the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'employee_id' => $request->employee_id,
             'password' => Hash::make($request->password),
-            'department' => $request->department,
-            'section' => $request->section,
-            'role' => $request->role,
-            'designation' => $request->designation,
-            'grade' => $request->grade,
         ]);
 
-        return redirect(RouteServiceProvider::HOME);
+        // Assign the role to the user
+        if ($role) {
+            $user->assignRole($role);
+        }
+
+        return redirect()->route('login')->with('success', "Successfully Registered. Login Now!!");
     }
 
     function logout() {

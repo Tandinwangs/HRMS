@@ -1,5 +1,5 @@
 @extends('layout') <!-- Assuming you have an app.blade.php layout -->
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -17,7 +17,7 @@
                                 <div class="col-md-6">
                                     <input id="name" type="text" class="form-control" name="name" required autofocus>
 
-                                    @error('email')
+                                    @error('name')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -30,7 +30,7 @@
                                 <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email"  required autocomplete="email" autofocus>
 
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
@@ -40,11 +40,24 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row mt-4">
+                                <label for="employee_id" class="col-md-4 col-form-label text-md-right">Employee ID:</label>
+
+                                <div class="col-md-6">
+                                    <input id="employee_id" type="text" class="form-control" name="employee_id" required autofocus>
+                                </div>
+                                @error('employee_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
                             <div class="form-group">
-                                <label for="head">Department Name:</label>
-                                <select class="form-control" id="department" name="department">
+                                <label for="department">Department Name:</label>
+                                <select class="form-control" id="department" name="department_id" onchange="loadSections()">
                                     @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('department_id')
@@ -54,7 +67,7 @@
 
                             <div class="form-group">
                                 <label for="section">Section Name:</label>
-                                <select class="form-control" id="section" name="section">
+                                <select class="form-control" id="section" name="section_id">
                                     <!-- Options will be dynamically added using JavaScript -->
                                 </select>
                                 @error('section_id')
@@ -63,8 +76,25 @@
                             </div>
 
                             <div class="form-group row  mt-4">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
+                                <label for="region" class="col-md-4 col-form-label text-md-right">Region</label>
+                                <div class="col-md-6">
+                                    <select id="user_id" class="form-control" name="region_id" required>
+                                        <option value="" disabled selected>Select Region</option>
+                                            @foreach ($regions as $region)
+                                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                            @endforeach
+                                        </select>
 
+                                    @error('role')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row  mt-4">
+                                <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
                                 <div class="col-md-6">
                                     <select id="user_id" class="form-control" name="role" required>
                                         <option value="" disabled selected>Select Role</option>
@@ -82,10 +112,9 @@
                             </div>
 
                             <div class="form-group row  mt-4">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">Designation</label>
-
+                                <label for="designation" class="col-md-4 col-form-label text-md-right">Designation</label>
                                 <div class="col-md-6">
-                                    <select id="user_id" class="form-control" name="designation" required>
+                                    <select id="user_id" class="form-control" name="designation_id" required>
                                         <option value="" disabled selected>Select Designation</option>
                                             @foreach ($designations as $designation)
                                             <option value="{{ $designation->id }}">{{ $designation->name }}</option>
@@ -104,7 +133,7 @@
                                 <label for="role" class="col-md-4 col-form-label text-md-right">Grade</label>
 
                                 <div class="col-md-6">
-                                    <select id="user_id" class="form-control" name="grade" required>
+                                    <select id="user_id" class="form-control" name="grade_id" required>
                                         <option value="" disabled selected>Select Grade</option>
                                             @foreach ($grades as $grade)
                                             <option value="{{ $grade->id }}">{{ $grade->name }}</option>
@@ -117,6 +146,33 @@
                                         </span>
                                     @enderror
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender">Gender:</label>
+                                <select name="gender" id="gender" class="form-control">
+                                    <option disabled selected>Select Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="A">All</option>
+                                </select>
+                                @error('gender')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label for="employment_type">Employement Type:</label>
+                                <select name="employment_type" id="employment_type" class="form-control">
+                                    <option disabled selected>Select EmplyType:</option>
+                                    <option value="probation_period">Probation</option>
+                                    <option value="regular_period">Regular</option>
+                                    <option value="contract_period">Contract</option>
+                                    <option value="notice_period">Notice</option>
+                                </select>
+                                @error('employment_type')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group row">
@@ -151,30 +207,49 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // Assuming you're using jQuery
-$('#department').on('change', function() {
-    var departmentId = $(this).val();
-    
-    $.ajax({
-        url: '/sections/' + departmentId,
-        method: 'GET',
-        success: function(response) {
-            console.log("thIS IS THE ",response);
-            var sections = response.sections;
-            var sectionDropdown = $('#section'); // Change this selector accordingly
-            
-            // Clear existing options and populate the dropdown
-            sectionDropdown.empty();
-            sectionDropdown.append('<option value="">Select Section</option>');
-            
-            $.each(sections, function(index, section) {
-                sectionDropdown.append('<option value="' + section.id + '">' + section.name + '</option>');
-            });
-        }
-    });
-});
 
+
+<script>
+    // Get references to the department and section dropdowns
+    var departmentDropdown = document.getElementById('department');
+    var sectionDropdown = document.getElementById('section');
+
+    // Add an event listener to the department dropdown
+    departmentDropdown.addEventListener('change', function() {
+        var departmentId = this.value;
+
+        // Clear existing options
+        sectionDropdown.innerHTML = '';
+
+        // Make an AJAX request to fetch sections based on the selected department
+        fetch('/sections/' + departmentId)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                var sections = data.sections;
+
+                // Add a default "Select Section" option
+                var defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select Section';
+                sectionDropdown.appendChild(defaultOption);
+
+                // Populate the section dropdown with fetched data
+                sections.forEach(function(section) {
+                    var option = document.createElement('option');
+                    option.value = section.id;
+                    option.textContent = section.name;
+                    sectionDropdown.appendChild(option);
+                });
+            })
+            .catch(function(error) {
+                console.error('Error fetching sections:', error);
+            });
+    });
 </script>
+
 @endsection

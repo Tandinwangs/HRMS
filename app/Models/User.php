@@ -6,20 +6,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles; // Add this line
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles; // Add HasRoles here
 
     protected $fillable = [
         'name',
+        'is_admin',
         'email',
+        'employee_id',
         'password',
-        'department',
-        'section',
-        'role',
-        'designation',
-        'grade'
+        'department_id',
+        'section_id',
+        'designation_id',
+        'grade_id',
+        'region_id',
+        'gender',
+        'employment_type'
     ];
 
     protected $hidden = [
@@ -34,21 +39,38 @@ class User extends Authenticatable
 
     public function department()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     public function section()
     {
-        return $this->belongsTo(Section::class);
+        return $this->belongsTo(Section::class, 'section_id');
     }
 
     public function designation()
     {
-        return $this->belongsTo(Designation::class);
+        return $this->belongsTo(Designation::class, 'designation_id');
     }
 
     public function grade()
     {
-        return $this->belongsTo(Grade::class);
+        return $this->belongsTo(Grade::class, 'grade_id');
+    }
+
+    public function region() {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    public function assignUserRole($roleName)
+    {
+        $role = Role::where('name', $roleName)->first();
+        if ($role) {
+            $this->assignRole($role);
+        }
+    }
+
+    public function appliedLeaves()
+    {
+        return $this->hasMany(AppliedLeave::class);
     }
 }
