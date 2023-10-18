@@ -63,6 +63,7 @@ class HolidaytypeController extends Controller
      */
     public function destroy(holidaytype $holidaytype)
     {
-        //
+        $holidaytype->delete();
+        
     }
 }

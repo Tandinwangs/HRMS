@@ -131,7 +131,8 @@ class HolidayController extends Controller
      */
     public function destroy(holiday $holiday)
     {
-        //
+        $holiday->delete();
+        return redirect()->back()->with('success', 'holiday deleted');
     }
     public function fetchHolidayDates()
     {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\leaveBalance;
 use Spatie\Permission\Traits\HasRoles; // Add this line
 
 class User extends Authenticatable
@@ -72,5 +73,19 @@ class User extends Authenticatable
     public function appliedLeaves()
     {
         return $this->hasMany(AppliedLeave::class);
+    }
+
+    public function leaveBalance()
+    {
+        return $this->hasOne(LeaveBalance::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            LeaveBalance::create(['user_id' => $user->id]);
+        });
     }
 }

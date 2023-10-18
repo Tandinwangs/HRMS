@@ -655,3 +655,146 @@
     });
 
 </script>
+
+
+<script>
+        $(document).ready(function () {
+        // Function to fetch the include_weekends setting for the selected leave type
+        function fetchIncludeWeekends(selectedLeaveTypeId) {
+            return fetch('/fetch-include-weekends/' + selectedLeaveTypeId)
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    return data;
+                })
+                .catch(function (error) {
+                    console.error('Error fetching include_weekends:', error);
+                    return { include_weekends: false, can_be_half_day: false };
+                });
+        }
+
+        // Function to fetch the include_public_holidays setting for the selected leave type
+        function fetchIncludePublicHolidays(selectedLeaveTypeId) {
+            return fetch('/fetch-include-public-holidays/' + selectedLeaveTypeId)
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw an Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    return data;
+                })
+                .catch(function (error) {
+                    console.error('Error fetching include_public_holidays:', error);
+                    return false;
+                });
+        }
+
+        // Function to fetch the list of holiday dates
+        function fetchHolidayDates() {
+            return fetch('/fetch-holiday-dates')
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    return data.holiday_dates;
+                })
+                .catch(function (error) {
+                    console.error('Error fetching holiday dates:', error);
+                    return [];
+                });
+        }
+
+        // Function to calculate the number of days
+        function calculateNumberOfDays(startDate, endDate, dayTypeStart, dayTypeEnd, includeWeekends, includePublicHolidays, holidayDates) {
+            // ... (rest of the calculateNumberOfDays function as in your previous code)
+
+            return numberOfDays;
+        }
+
+        // Function to enable or disable "First Half" and "Second Half" options
+        function toggleHalfDayOptions(canBeHalfDay) {
+            const $halfDayOptions = $('#day_type_start option[value="first_half"], #day_type_start option[value="second_half"], #day_type_end option[value="first_half"], #day_type_end option[value="second_half"]');
+
+            if (canBeHalfDay) {
+                $halfDayOptions.prop('disabled', false);
+            } else {
+                $halfDayOptions.prop('disabled', true);
+            }
+        }
+
+        // Function to update the number of days and set it in the UI
+        function updateNumberOfDays(includeWeekends, includePublicHolidays) {
+                const dayTypeStart = $('#day_type_start').val();
+                const dayTypeEnd = $('#day_type_end').val();
+                const startDate = new Date($('#start_date').val());
+                const endDate = new Date($('#end_date').val());
+
+                // Fetch the list of holiday dates
+                fetchHolidayDates()
+                    .then(function (holidayDates) {
+                        console.log('dates', holidayDates);
+                        const numberOfDays = calculateNumberOfDays(
+                            startDate,
+                            endDate,
+                            dayTypeStart,
+                            dayTypeEnd,
+                            includeWeekends,
+                            includePublicHolidays,
+                            holidayDates
+                        );
+                        $('#number_of_days').val(numberOfDays);
+                    });
+            }
+
+        // Add event listeners for day type, date fields, and leave type
+        $('#day_type_start, #day_type_end, #start_date, #end_date, #leave_type_select').on('change', function () {
+            const selectedLeaveTypeId = $('#leave_type_select').val();
+
+            // Fetch the include_weekends and can_be_half_day settings for the selected leave type
+            fetchIncludeWeekends(selectedLeaveTypeId)
+                .then(function (data) {
+                    const includeWeekends = data.include_weekends;
+                    const canBeHalfDay = data.can_be_half_day;
+
+                    // Fetch the include_public_holidays setting for the selected leave type
+                    fetchIncludePublicHolidays(selectedLeaveTypeId)
+                        .then(function (includePublicHolidays) {
+                            // Calculate the number of days and update the UI
+                            updateNumberOfDays(includeWeekends, includePublicHolidays);
+                            // Toggle "First Half" and "Second Half" options
+                            toggleHalfDayOptions(canBeHalfDay);
+                        });
+                });
+        });
+
+        // Initial calculation when the page loads
+        updateNumberOfDays(false, false); // Default to exclude weekends and public holidays
+        toggleHalfDayOptions(false); // Default to disable "First Half" and "Second Half" options
+
+        // Additional event listeners for start_date and end_date
+        $('#start_date, #end_date').on('change', function () {
+            // Calculate the number of days when start_date or end_date changes
+            const selectedLeaveTypeId = $('#leave_type_select').val();
+            fetchIncludeWeekends(selectedLeaveTypeId)
+                .then(function (data) {
+                    const includeWeekends = data.include_weekends;
+                    const canBeHalfDay = data.can_be_half_day;
+
+                    fetchIncludePublicHolidays(selectedLeaveTypeId)
+                        .then(function (includePublicHolidays) {
+                            updateNumberOfDays(includeWeekends, includePublicHolidays);
+                        });
+                });
+        });
+    });
+
+</script>

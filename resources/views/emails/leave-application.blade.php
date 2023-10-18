@@ -1,12 +1,13 @@
 @component('mail::message')
 # Leave Application
 
-Dear {{ $user->name }},
+Dear {{ $approval->name }},
 
 {{$currentUser->name}} have applied for the Leave.
-Please visit your dashboard to take action.
-Leave Start Date: {{ $startDate }}
-Leave End Date: {{ $endDate }}
+Please visit @component('mail::button', ['url' => route('login')])
+Here
+@endcomponent
+to review the details and take necessary action.
 
 Thank you for using our leave application system.
 

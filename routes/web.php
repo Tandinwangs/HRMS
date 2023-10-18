@@ -29,6 +29,8 @@ use App\Http\Controllers\Leave\Rule\LeaveRuleController;
 use App\Http\Controllers\Leave\YearEnd\LeaveYearendProcessingController;
 use App\Http\Controllers\Leave\Apply\AppliedLeaveController;
 use App\Http\Controllers\Leave\Approval\LeaveApprovalController;
+use App\Http\Controllers\NoDue\NoDueRequestController;
+use App\Http\Controllers\Nodue\NoDueRequestApprovalController;
 
 
 /*
@@ -110,18 +112,18 @@ Route::namespace('WorkStructure')->group(function () {
     Route::get('/timezone', [TimezoneController::class, 'index'])->name('timezone.index');
     Route::post('/timezoneAdd', [TimezoneController::class, 'store'])->name('timezone.store');
     Route::patch('/updateTimezone/{timezone}', [TimezoneController::class, 'update'])->name('timezone.update');
-    Route::delete('/delete/{timezone}', [TimezoneController::class, 'destroy'])->name('timezone.delete');
+    Route::delete('/deletetimezone/{timezone}', [TimezoneController::class, 'destroy'])->name('timezone.delete');
 
     Route::get('/region', [RegionController::class, 'index'])->name('region.index');
     Route::post('/addRegion', [RegionController::class, 'store'])->name('region.store');
     Route::patch('/updateRegion/{region}', [RegionController::class, 'update'])->name('region.update');
-    Route::delete('/delete/{region}', [RegionController::class, 'destroy'])->name('region.delete');
+    Route::delete('/deleteRegion/{region}', [RegionController::class, 'destroy'])->name('region.delete');
 
     Route::get('/dzongkhag', [DzongkhagController::class, 'index'])->name('dzongkhag.index');
     Route::get('/get-regions/{countryId}', [DzongkhagController::class, 'getRegions'])->name('getRegions');
     Route::post('/addDzongkhag', [DzongkhagController::class, 'store'])->name('dzongkhag.store');
     Route::patch('/updateDzongkhag/{dzongkhag}', [DzongkhagController::class, 'update'])->name('dzongkhag.update');
-    Route::delete('/delete/{dzongkhag}', [DzongkhagController::class, 'destroy'])->name('dzongkhag.delete');
+    Route::delete('/deleteDzongkhag/{dzongkhag}', [DzongkhagController::class, 'destroy'])->name('dzongkhag.delete');
 
     Route::get('/storelocation', [StorelocationController::class, 'index'])->name('storelocation.index');
     Route::post('/addStorelocation', [StorelocationController::class, 'store'])->name('storelocation.store');
@@ -198,10 +200,20 @@ Route::namespace('Leave')->group(function () {
     Route::post('/apply-leave', [AppliedLeaveController::class, 'store'])->name('applyleave.store');
     Route::get('/fetch-include-weekends/{leaveTypeId}', [AppliedLeaveController::class, 'fetchIncludeWeekends'])->name('fetch-include-weekends');
     Route::get('/fetch-include-public-holidays/{leaveTypeId}', [AppliedLeaveController::class, 'fetchIncludePublicHolidays'])->name('fetch-include-public-holidays');
+    Route::get('/fetch-can-be-half-day/{leaveTypeId}', [AppliedLeaveController::class, 'fetchCanBeHalfDay'])->name('fetch-can-be-half-day');
 
     Route::get('/leaveApproval', [LeaveApprovalController::class, 'index'])->name('leaveApproval.index');
     Route::post('/leave-approval/{id}', [LeaveApprovalController::class, 'approveLeave'])->name('leave.approve');
+    Route::post('/leave-decline/{id}', [LeaveApprovalController::class, 'declineLeave'])->name('leave.decline');
+    Route::post('/leave-cancel/{id}', [LeaveApprovalController::class, 'cancelLeave'])->name('leave.cancel');
     
+});
+
+Route::namespace('NoDue')->group(function () {
+    Route::get('/nodue',[NoDueRequestController::class, 'index'])->name('nodue.index');
+    Route::post('/nodue', [NoDueRequestController::class, 'create'])->name('nodue.create');
+    Route::get('nodueApproval', [NoDueRequestApprovalController::class, 'index'])->name('nodueapproval.index');
+    Route::get('/approve/{id}', [NoDueRequestApprovalController::class, 'approve'])->name('nodue.approve');
 });
 
 

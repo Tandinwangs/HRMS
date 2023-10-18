@@ -20,6 +20,7 @@
         Apply Leave
     </button>
 
+
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -120,6 +121,10 @@
         </div>
     </div>
 
+    <button type="button" class="btn btn-primary mt-4" data-toggle="modal" data-target="#applyLeaveEncahsment">
+        Leave Encashment
+    </button>
+ 
 
         <table class="table">
             <thead>
@@ -141,11 +146,42 @@
                         <td>{{ $history->start_date }}</td>
                         <td>{{ $history->end_date }}</td>
                         <td>{{ $history->number_of_days }}</td>
-                         <td>{{$history->status}}</td>
-                        <td>
-                            <a href="" class="btn btn-primary btn-sm">Edit</a>
-                            <a href="{{ route('leavePolicy.view', ['leave_id' => $history->leave_id])}}" class="btn btn-primary btn-sm">View</a> 
+                        <td class="@if ($history->status === 'approved') bg-success text-white
+                            @elseif ($history->status === 'pending') bg-warning
+                            @elseif ($history->status === 'declined') bg-danger text-white
+                            @else bg-danger text-white
+                        @endif">
+                            {{ $history->status }}
                         </td>
+                        @if($history->status === 'pending')
+                        <td>
+                        <a type="button"  class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cancelleave{{ $history->id}}">Cancel</a>
+                        </td>
+                        @endif
+                        <div class="modal" id="cancelleave{{ $history->id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <span class="modal-title">Leave Cancellation</span>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                    
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form method="POST" action="{{ route('leave.cancel', ['id' => $history->id]) }}">
+                                @csrf
+                            <h4>Are you sure you want to cancel this leave?</h4>
+
+                        <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Cancel Now</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+
                     </tr>
                 @endforeach
                 @else
@@ -153,6 +189,53 @@
                 @endif
             </tbody>
         </table>
+
+        <div class="modal" id="applyLeaveEncahsment">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Apply for Leave Encashment</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+            
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('applyleave.store') }}" enctype="multipart/form-data">
+                        @csrf
+                            <div class="form-group">
+                                <input type="hidden" id="user_id" name="user_id" class="form-control" value="{{ auth()->user()->id }}" required readonly>
+                            </div>  
+
+                            <div class="form-group">
+                                <label for="leave_balance">Total leave for Encashment</label>
+                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="leave_balance">Leave Eligible for Encashment</label>
+                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="leave_balance">Leave Apply for Encashment</label>
+                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="leave_balance">Encashment Amount</label>
+                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                            </div>
+
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
     </div>
 
     <!-- Include Bootstrap JS -->
@@ -192,6 +275,7 @@
             .then(function(data) {
                 var leaveBalance = data.balance;
 
+
                 // Update the leave balance input with the fetched value
                 leaveBalanceInput.value = leaveBalance;
             })
@@ -202,107 +286,7 @@
 
 </script>
 
-<!-- <script>
-    $(document).ready(function () {
-        // Add event listeners for day type, date fields, and day type start
-        $('#day_type_start, #day_type_end, #start_date, #end_date').on('change', function () {
-            updateNumberOfDays();
-        });
-
-        // Add a separate event listener for day type start
-        $('#day_type_start').on('change', function () {
-            updateNumberOfDaysForStartDate();
-        });
-
-        // Add an event listener to the leave type dropdown
-        $('#leave_type_select').on('change', function () {
-            // Get the selected leave type ID
-            const selectedLeaveTypeId = $(this).val();
-
-            // Check if a leave type is selected
-            if (selectedLeaveTypeId) {
-                // Fetch the include_weekends setting for the selected leave type
-                fetchIncludeWeekends(selectedLeaveTypeId)
-                    .then(function (includeWeekends) {
-                        // Handle the include_weekends data here
-                        console.log('include_weekends:', includeWeekends);
-
-                        // Now, you can update the UI or perform other actions based on includeWeekends
-                        // For now, we'll just log it to the console.
-
-                        // Update the number of days calculation based on include_weekends
-                        updateNumberOfDays(includeWeekends);
-                    });
-            }
-        });
-
-        // Function to fetch the include_weekends setting for the selected leave type
-        function fetchIncludeWeekends(selectedLeaveTypeId) {
-            return fetch('/fetch-include-weekends/' + selectedLeaveTypeId)
-                .then(function (response) {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(function (data) {
-                    return data.include_weekends;
-                })
-                .catch(function (error) {
-                    console.error('Err  or fetching include_weekends:', error);
-                    return false; // Default to false if there's an error
-                });
-    }
-
-        function updateNumberOfDays(includeWeekends) {
-            const dayTypeStart = $('#day_type_start').val();
-            const dayTypeEnd = $('#day_type_end').val();
-            const startDate = new Date($('#start_date').val());
-            const endDate = new Date($('#end_date').val());
-            let numberOfDays = 0.0;
-
-            while (startDate <= endDate) {
-                const isSunday = startDate.getDay() === 0;
-                const isSaturday = startDate.getDay() === 6;
-
-                if (includeWeekends || (!isSunday && !isSaturday)) {
-                    if (startDate.getTime() === startDate.getTime() && dayTypeStart !== 'full_day') {
-                        numberOfDays += 0.5;
-                    } else if (startDate.getTime() === endDate.getTime() && dayTypeEnd !== 'full_day') {
-                        numberOfDays += 0.5;
-                    } else {
-                        numberOfDays += 1;
-                    }
-                }
-
-                startDate.setDate(startDate.getDate() + 1);
-            }
-
-            $('#number_of_days').val(numberOfDays);
-        }
-
-        function updateNumberOfDaysForStartDate() {
-            const dayTypeStart = $('#day_type_start').val();
-            let numberOfDays = 0.0;
-
-            if (dayTypeStart === 'full_day') {
-                numberOfDays = 1;
-            } else if (dayTypeStart === 'first_half' || dayTypeStart === 'second_half') {
-                numberOfDays = 0.5;
-            } else if (dayTypeStart === 'shift') {
-                // Implement logic for 'shift' if needed
-            }
-
-            $('#number_of_days').val(numberOfDays);
-        }
-
-
-        // Initial calculation when the page loads
-        updateNumberOfDays();
-    });
-</script>  -->
-
-<script>
+ <script>
     $(document).ready(function () {
         // Function to fetch the include_weekends setting for the selected leave type
         function fetchIncludeWeekends(selectedLeaveTypeId) {
@@ -358,6 +342,55 @@
                 });
         }
 
+         // Function to fetch the can be half day or not
+        function fetchCanbeHalfDay(selectedLeaveTypeId) {
+            return fetch('/fetch-can-be-half-day/'+ selectedLeaveTypeId)
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    return data.can_be_half_day;
+                })
+                .catch(function (error) {
+                    console.error('Error fetching can_be_half_day data:', error);
+                    return false; // Default to false if there's an error
+                });
+        }
+
+        // Function to enable or disable "First Half" and "Second Half" options
+        function toggleHalfDayOptions(canBeHalfDay) {
+            const $halfDayOptions = $('#day_type_start option[value="first_half"], #day_type_start option[value="second_half"], #day_type_end option[value="first_half"], #day_type_end option[value="second_half"]');
+
+            if (canBeHalfDay) {
+                $halfDayOptions.prop('disabled', false);
+            } else {
+                $halfDayOptions.prop('disabled', true);
+                // If "First Half" or "Second Half" was selected, switch to "Full Day"
+                if ($('#day_type_start').val() === 'first_half' || $('#day_type_start').val() === 'second_half') {
+                    $('#day_type_start').val('full_day');
+                }
+                if ($('#day_type_end').val() === 'first_half' || $('#day_type_end').val() === 'second_half') {
+                    $('#day_type_end').val('full_day');
+                }
+            }
+        }
+
+        // Add event listener for the leave type select
+        $('#leave_type_select').on('change', function () {
+            const selectedLeaveTypeId = $('#leave_type_select').val();
+
+            // Fetch the can_be_half_day setting for the selected leave type
+            fetchCanbeHalfDay(selectedLeaveTypeId)
+                .then(function (canBeHalfDay) {
+                    // Toggle "First Half" and "Second Half" options based on can_be_half_day
+                    toggleHalfDayOptions(canBeHalfDay);
+                });
+        });
+
+
        // Function to calculate the number of days
         function calculateNumberOfDays(startDate, endDate, dayTypeStart, dayTypeEnd, includeWeekends, includePublicHolidays, holidayDates) {
             let numberOfDays = 0.0;
@@ -405,7 +438,7 @@
             // Fetch the list of holiday dates
             fetchHolidayDates()
                 .then(function (holidayDates) {
-                    console.log('dates', holidayDates);
+
                     const numberOfDays = calculateNumberOfDays(
                         startDate,
                         endDate,
@@ -452,45 +485,11 @@
         });
     });
 
-</script>
+</script> 
 
 
 
 
-<!-- <script>
-    // Function to calculate the number of days considering weekends
-    function calculateNumberOfDays() {
-        const startDate = new Date(document.getElementById("start_date").value);
-        const endDate = new Date(document.getElementById("end_date").value);
-        const dayTypeStart = document.getElementById("day_type_start").value;
-        const dayTypeEnd = document.getElementById("day_type_end").value;
-
-        // Calculate the number of days between start and end dates
-        const millisecondsPerDay = 24 * 60 * 60 * 1000;
-        const days = (endDate - startDate) / millisecondsPerDay + 1;
-
-        // Consider weekends (Saturdays and Sundays) if necessary
-        let numberOfDays = days;
-        if (dayTypeStart === "first_half") {
-            numberOfDays -= 0.5; // Subtract half a day from the start
-        }
-        if (dayTypeEnd === "second_half") {
-            numberOfDays -= 0.5; // Subtract half a day from the end
-        }
-
-        // Update the input field with the calculated value
-        document.getElementById("number_of_days").value = numberOfDays;
-    }
-
-    // Add an event listener to trigger the calculation when date or day_type changes
-    document.getElementById("start_date").addEventListener("change", calculateNumberOfDays);
-    document.getElementById("end_date").addEventListener("change", calculateNumberOfDays);
-    document.getElementById("day_type_start").addEventListener("change", calculateNumberOfDays);
-    document.getElementById("day_type_end").addEventListener("change", calculateNumberOfDays);
-
-    // Initial calculation
-    calculateNumberOfDays();
-</script> -->
 
 
 

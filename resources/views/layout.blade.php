@@ -59,6 +59,16 @@
                                         <a class="dropdown-item" href="{{ route('holiday.index') }}">{{ __('Holiday') }}</a>          
                                     </div>
                             </div>
+
+                            <div class="dropdown show">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    No Due
+                                </a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <a class="dropdown-item" href="{{ route('nodue.index') }}">{{ __('Apply') }}</a>
+                                        <a class="dropdown-item" href="{{ route('nodueapproval.index') }}">{{ __('Approval') }}</a>
+                                    </div>
+                            </div>
                             <div class="dropdown show">
                                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Settings

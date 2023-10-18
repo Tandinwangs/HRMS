@@ -26,8 +26,8 @@ class StoreholidayRequest extends FormRequest
             'holiday_id' => 'required|exists:holidaytypes,id',
             'region_id' => 'required|array', // Ensure region_id is an array
             'region_id.*' => 'exists:regions,id', // Validate each region_id item
-            'optradioholidayfrom' => 'required|in:First Half,Second Half',
-            'optradioholidaylto' => 'required|in:First Half,Second Half',
+            'optradioholidayfrom' => 'in:First Half,Second Half',
+            'optradioholidaylto' => 'in:First Half,Second Half',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'status' => 'required|in:1,0',

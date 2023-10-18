@@ -258,41 +258,42 @@
     });
 </script>
 
-<script>
-    document.getElementById('country_id_{{ $dzongkhag->id }}').addEventListener('change', function () {
-        // Get the selected country's ID
-        const selectedCountryId = this.value;
-        console.log('id', selectedCountryId);
+@if(isset($dzongkhag))
+    <script>
+        document.getElementById('country_id_{{ $dzongkhag->id }}').addEventListener('change', function () {
+            // Get the selected country's ID
+            const selectedCountryId = this.value;
+            console.log('id', selectedCountryId);
 
-        // Make an AJAX request to fetch regions associated with the selected country
-        fetch(`/get-regions/${selectedCountryId}`)
-            .then(response => response.json())
-            .then(data => {
-                // Get the region select input element
-                const regionSelect = document.getElementById('region_id_{{ $dzongkhag->id }}');
+            // Make an AJAX request to fetch regions associated with the selected country
+            fetch(`/get-regions/${selectedCountryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Get the region select input element
+                    const regionSelect = document.getElementById('region_id_{{ $dzongkhag->id }}');
 
-                // Clear existing options
-                regionSelect.innerHTML = '';
+                    // Clear existing options
+                    regionSelect.innerHTML = '';
 
-                // Add the default "Select Region" option
-                const defaultOption = document.createElement('option');
-                defaultOption.text = 'Select Region';
-                defaultOption.disabled = true;
-                defaultOption.selected = true;
-                regionSelect.appendChild(defaultOption);
+                    // Add the default "Select Region" option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.text = 'Select Region';
+                    defaultOption.disabled = true;
+                    defaultOption.selected = true;
+                    regionSelect.appendChild(defaultOption);
 
-                // Populate the region dropdown with fetched regions
-                data.forEach(region => {
-                    const option = document.createElement('option');
-                    option.value = region.id;
-                    option.text = region.name;
-                    regionSelect.appendChild(option);
+                    // Populate the region dropdown with fetched regions
+                    data.forEach(region => {
+                        const option = document.createElement('option');
+                        option.value = region.id;
+                        option.text = region.name;
+                        regionSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching regions:', error);
                 });
-            })
-            .catch(error => {
-                console.error('Error fetching regions:', error);
-            });
-    });
-</script>
-
+        });
+    </script>
+@endif
 @endsection

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->enum('level1', ['pending', 'declined', 'approved'])->default('pending');
             $table->enum('level2', ['pending', 'declined', 'approved'])->default('pending');
             $table->enum('level3', ['pending', 'declined', 'approved'])->default('pending');
-            $table->enum('status', ['pending', 'declined', 'approved'])->default('pending');
+            $table->enum('status', ['pending', 'declined', 'approved', 'cancelled'])->default('pending');
             $table->timestamps();
         });   
     }

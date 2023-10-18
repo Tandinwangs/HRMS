@@ -11,16 +11,12 @@ class LeaveApplicationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $startDate;
-    public $endDate;
+    public $approval;
     public $currentUser;
 
-    public function __construct($user, $startDate, $endDate, $currentUser)
+    public function __construct($approval, $currentUser)
     {
-        $this->user = $user;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+        $this->approval = $approval;
         $this->currentUser = $currentUser;
     }
 

@@ -114,10 +114,11 @@
                          @endif
                         <td>
                             <a data-toggle="modal" data-target="#myModal{{$timezone->id}}" class="btn btn-primary btn-sm">Edit</a>
+
                             <form action="{{ route('timezone.delete', $timezone->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this leave type?')">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this timezone?')">Delete</button>
                             </form>
                         </td>
 

@@ -18,34 +18,30 @@
         <thead>
             <tr>
                 <th>User</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Level</th>
+                <th>Reason</th>
                 <th>Status</th>
                 <th>Action</th>
                 <!-- Add more columns as needed -->
             </tr>
         </thead>
         <tbody>
-            @foreach ($leaveApplications as $leaveApplication)
+            @foreach ($requests as $request)
                 <tr>
-                    <td>{{ $leaveApplication->user->name }}</td>
-                    <td>{{ $leaveApplication->start_date }}</td>
-                    <td>{{ $leaveApplication->end_date }}</td>
-                    <td>{{ $leaveApplication->level1 }}</td>
-                    <td class="@if ($leaveApplication->status === 'approved') bg-success text-white
-                        @elseif ($leaveApplication->status === 'pending') bg-warning
-                        @elseif ($leaveApplication->status === 'declined') bg-danger text-white
+                    <td>{{ $request->noDueRequest->user->name }}</td>
+                    <td>{{ $request->noDueRequest->reason }}</td>
+                    <td class="@if ($request->status === 'approved') bg-success text-white
+                        @elseif ($request->status === 'pending') bg-warning
+                        @elseif ($request->status === 'declined') bg-danger text-white
                         @else text-muted
                     @endif">
-                        {{ $leaveApplication->status }}
+                        {{ $request->status }}
                     </td>
 
-                @if($leaveApplication->status === 'pending')
+                @if($request->status === 'pending')
                     <td>
-                        <a type="button"  class="btn btn-primary btn-sm" data-toggle="modal" data-target="#acceptleave{{ $leaveApplication->id}}">Accept</a>
+                        <a type="button"  class="btn btn-primary btn-sm" data-toggle="modal" data-target="#acceptleave{{ $request->id}}">Accept</a>
                         </td>
-                <div class="modal" id="acceptleave{{ $leaveApplication->id}}">
+                <div class="modal" id="acceptleave{{ $request->id}}">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <!-- Modal Header -->
@@ -56,7 +52,7 @@
                     
                         <!-- Modal Body -->
                         <div class="modal-body">
-                            <form method="POST" action="{{ route('leave.approve', ['id' => $leaveApplication->id]) }}">
+                            <form method="GET" action="{{ route('nodue.approve', ['id' => $request->id]) }}">
                                 @csrf
                             <h4>Are you sure you want to approve this leave?</h4>
 
@@ -71,9 +67,9 @@
 
 
                 <td class="mr-">
-                <a type="button"  class="btn btn-danger btn-sm" data-toggle="modal" data-target="#declineleave{{ $leaveApplication->id}}">Decline</a> 
+                <a type="button"  class="btn btn-danger btn-sm" data-toggle="modal" data-target="#declineleave{{ $request->id}}">Decline</a> 
                 </td>
-                <div class="modal" id="declineleave{{ $leaveApplication->id}}">
+                <div class="modal" id="declineleave{{ $request->id}}">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <!-- Modal Header -->
@@ -84,7 +80,7 @@
                     
                         <!-- Modal Body -->
                         <div class="modal-body">
-                            <form method="POST" action="{{ route('leave.decline', ['id' => $leaveApplication->id]) }}">
+                            <form method="POST" action="{{ route('leave.decline', ['id' => $request->id]) }}">
                                 @csrf
                             <h4>Are you sure you want to decline this leave?</h4>
 
