@@ -14,6 +14,9 @@ use Spatie\Permission\Models\Role;
 use App\Models\Designation;
 use App\Models\Grade;
 use App\Models\Region;
+use App\Models\leave_rule;
+use App\Models\LeaveType;
+use App\Models\LeaveBalance;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserCreatedMail;
@@ -133,8 +136,9 @@ class AdminController extends Controller
         $user->assignRole($role);
         // Send email with random password
         Mail::to($user->email)->send(new UserCreatedMail($user, $randomPassword));
+
     
-        return redirect()->route('users.create')->with('success', 'User created successfully.');
+        return redirect()->back()->with('success', 'User created successfully.');
     }
     
 

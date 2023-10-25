@@ -209,17 +209,17 @@
 
                             <div class="form-group">
                                 <label for="leave_balance">Total leave for Encashment</label>
-                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" value="{{$encash_balance->earned_leave_balance}}" readonly required>
                             </div>
 
                             <div class="form-group">
                                 <label for="leave_balance">Leave Eligible for Encashment</label>
-                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" value="{{$earnedLeaveRecord->min_balance}}" readonly required>
                             </div>
 
                             <div class="form-group">
                                 <label for="leave_balance">Leave Apply for Encashment</label>
-                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" value="{{$earnedLeaveRecord->max_balance}}" readonly required>
                             </div>
 
                             <div class="form-group">

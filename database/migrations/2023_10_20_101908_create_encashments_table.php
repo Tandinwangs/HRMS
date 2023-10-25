@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('encashments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->boolean('status')->default(true);
-            $table->foreignId('department_id')->constrained('departments');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('encashments');
     }
 };

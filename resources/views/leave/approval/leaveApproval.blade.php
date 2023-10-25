@@ -17,10 +17,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>User</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Level</th>
+                <th>Employee</th>
+                <th>LeaveType</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>No.of Days</th>
                 <th>Status</th>
                 <th>Action</th>
                 <!-- Add more columns as needed -->
@@ -30,9 +31,10 @@
             @foreach ($leaveApplications as $leaveApplication)
                 <tr>
                     <td>{{ $leaveApplication->user->name }}</td>
+                    <td>{{ $leaveApplication->leavetype->name }}</td>
                     <td>{{ $leaveApplication->start_date }}</td>
                     <td>{{ $leaveApplication->end_date }}</td>
-                    <td>{{ $leaveApplication->level1 }}</td>
+                    <td>{{ $leaveApplication->number_of_days }}</td>
                     <td class="@if ($leaveApplication->status === 'approved') bg-success text-white
                         @elseif ($leaveApplication->status === 'pending') bg-warning
                         @elseif ($leaveApplication->status === 'declined') bg-danger text-white

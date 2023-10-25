@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->boolean('status')->default(true);
-            $table->foreignId('department_id')->constrained('departments');
-            $table->timestamps();
+        Schema::table('sections', function (Blueprint $table) {
+            $table->renameColumn('department', 'department_id');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::table('sections', function (Blueprint $table) {
+            $table->renameColumn('department_id', 'department');
+        });
     }
 };

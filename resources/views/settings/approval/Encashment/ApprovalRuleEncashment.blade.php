@@ -8,8 +8,14 @@
                 {{ session('success') }}
             </div>
         @endif
+
+        @if(session('error'))
+            <div id="error-message" class="alert alert-error">
+                {{ session('error') }}
+            </div>
+        @endif
         <a href="{{ route('approval.create') }}" class="btn btn-primary mb-2">Add New Approval</a>
-        <a href="{{ route('encashment_approval.index') }}" class="link-secondary">Leave Encashment</a>
+        <a href="{{ route('approval.create') }}" class="link-secondary">Leave Encashment</a>
         <table class="table">
             <thead>
                 <tr>
@@ -21,15 +27,15 @@
                 </tr>
             </thead>
             <tbody>
-                @if($approvals->count() > 0)
-                @foreach($approvals as $approval)
+                @if($EncashmentApprovals->count() > 0)
+                @foreach($EncashmentApprovals as $Encashmentapproval)
                     <tr>
-                        <td>{{ $approval->type->name }}</td>
-                        <td>{{ $approval->RuleName }}</td>
-                        <td>{{ $approval->start_date }}</td>
-                        <td>{{ $approval->end_date }}</td>
+                        <td>{{ $Encashmentapproval->type->name }}</td>
+                        <td>{{ $Encashmentapproval->RuleName }}</td>
+                        <td>{{ $Encashmentapproval->start_date }}</td>
+                        <td>{{ $Encashmentapproval->end_date }}</td>
                         <td>
-                            <a href="{{ route('approval.show', ['approvalRule' => $approval->id])}}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{{ route('approval_encashment.show', ['leaveEncashmentApprovalRule' => $Encashmentapproval->id])}}" class="btn btn-primary btn-sm">Edit</a>
                           
                         </td>
                     </tr>

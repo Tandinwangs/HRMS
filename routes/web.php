@@ -21,6 +21,9 @@ use App\Http\Controllers\Settings\RolesAndPermission\PermissionController;
 use App\Http\Controllers\Settings\Hierarchy\HierarchyController;
 use App\Http\Controllers\Settings\Approval\ApprovalRuleController;
 use App\Http\Controllers\Settings\Approval\ApprovalConditionController;
+use App\Http\Controllers\Settings\Approval\Encashment\LeaveEncashmentApprovalRuleController;
+use App\Http\Controllers\Settings\Approval\Encashment\LeaveEncashmentApprovalConditionController;
+use App\Http\Controllers\Settings\Formula\Encashment\LeaveEncashmentFormulaController;
 use App\Http\Controllers\Settings\Formula\FormulaController;
 use App\Http\Controllers\Leave\Type\LeavetypeController;
 use App\Http\Controllers\Leave\Policy\LeavePolicyController;
@@ -151,19 +154,31 @@ Route::namespace('Settings')->group(function () {
 
     Route::get('/approval', [ApprovalRuleController::class, 'index'])->name('approval.index');
     Route::get('/approvalAdd', [ApprovalRuleController::class, 'create'])->name('approval.create');
-    Route::post('/approval', [ApprovalRuleController::class, 'store'])->name('approval.store');
+    Route::post('/approval', [ApprovalRuleController::class, 'store'])->name('approval.leave.store');
     Route::get('/approval/{approvalRule}', [ApprovalRuleController::class, 'show'])->name('approval.show');
     Route::patch('/approval/{approvalRule}', [ApprovalRuleController::class, 'update'])->name('approval.update');
     Route::get('/fetch-types/{for}', [ApprovalRuleController::class, 'fetchTypes'])->name('fetch-types');
 
+    Route::get('/approvalEncashment', [LeaveEncashmentApprovalRuleController::class, 'index'])->name('encashment_approval.index');
+    Route::post('/encashmentApprovalRule', [LeaveEncashmentApprovalRuleController::class, 'store'])->name('approval.encashment.store');
+    Route::get('/approvalEncashment/{leaveEncashmentApprovalRule}', [LeaveEncashmentApprovalRuleController::class, 'show'])->name('approval_encashment.show');
 
     Route::get('/condition/{approval_rule_id}', [ApprovalConditionController::class, 'create'])->name('condition.create');
     Route::post('/condition', [ApprovalConditionController::class, 'store'])->name('condition.store');
     Route::get('/approval_condition/{approval_condition}/edit', [ApprovalConditionController::class, 'edit'])->name('approval_condition.edit');
     Route::patch('/condition/{approval_condition}', [ApprovalConditionController::class, 'update'])->name('condition.update');
 
+    Route::get('/encashmenCondition/{encashment_approval_rule_id}', [LeaveEncashmentApprovalConditionController::class, 'create'])->name('encashment_condition.create');
+    Route::post('/encashmenCondition', [LeaveEncashmentApprovalConditionController::class, 'store'])->name('encashment_condition.store');
+    Route::get('/formula/create-for-encashment-approval-condition/{encashmentApprovalConditionId}', [LeaveEncashmentFormulaController::class, 'createForEncashmentApprovalCondition'])
+    ->name('formula.createForEncashmentApprovalCondition');
+    Route::post('/formulaEncashment', [LeaveEncashmentFormulaController::class, 'store'])->name('encashment_formula.store');
+    Route::delete('/encashment-formuala/{leaveEncashmentFormula}', [LeaveEncashmentFormulaController::class, 'destroy'])->name('encashment_formula.delete');
+
     Route::get('/formula/create-for-approval-condition/{approvalConditionId}', [FormulaController::class, 'createForApprovalCondition'])
     ->name('formula.createForApprovalCondition');
+    
+
     Route::post('/formula', [FormulaController::class, 'store'])->name('formula.store');
     Route::delete('/formula/{formula}', [FormulaController::class, 'destroy'])->name('formula.delete');
 

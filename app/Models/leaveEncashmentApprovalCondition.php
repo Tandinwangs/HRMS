@@ -5,23 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class approval_condition extends Model
+class leaveEncashmentApprovalCondition extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'approval_rule_id',
+        'leave_encashment_approval_rule_id',
         'approval_type',
         'hierarchy_id',
         'employee_id',
         'MaxLevel',
-        'AutoApproval',
+        'AutoApproval'
     ];
 
     // Define the relationship to approval_rules
-    public function approvalRule()
+    public function leaveEncashmentApprovalRule()
     {
-        return $this->belongsTo(ApprovalRule::class, 'approval_rule_id');
+        return $this->belongsTo(leaveEncashmentApprovalRule::class, 'leave_encashment_approval_rule_id');
     }
 
     public function hierarchy()

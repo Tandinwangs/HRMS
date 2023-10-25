@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use App\Mail\LeaveApplicationMail;
 use Illuminate\Support\Facades\Mail;
+use App\models\LeaveBalance;
+use App\Models\leave_yearend_processing;
 
 class AppliedLeaveController extends Controller
 {
@@ -29,8 +31,13 @@ class AppliedLeaveController extends Controller
  
         $leave_types = leavetype::all();
         $leaveHistory = applied_leave::where('user_id', $user_id)->get();
+        $earnedLeaveRecord = leave_yearend_processing::whereHas('leave', function ($query) {
+            $query->where('name', 'Earned Leave');
+        })->first();
+        $encash_balance = LeaveBalance::where('user_id', $user_id)->first();
+
        
-        return view('leave.apply.leaveHistory', compact('leaveHistory', 'leave_types'));
+        return view('leave.apply.leaveHistory', compact('leaveHistory', 'leave_types', 'earnedLeaveRecord', 'encash_balance'));
     }
 
     /**
@@ -230,7 +237,10 @@ class AppliedLeaveController extends Controller
     
         // Compare the number of days requested with the leave balance
         $numberOfDaysRequested = (float) $request->number_of_days;
+
     
+        
+        
         if ($numberOfDaysRequested > $leaveBalance) {
             return redirect()->back()->with('error', 'Number of days requested exceeds the leave balance');
         }
@@ -380,4 +390,6 @@ class AppliedLeaveController extends Controller
 
         return response()->json(['can_be_half_day'=> $leavePlan->can_be_half_day]);
     }
+
+    
 }

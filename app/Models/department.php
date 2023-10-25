@@ -18,4 +18,10 @@ class department extends Model
         // Define the relationship with the User model
         return $this->hasMany(User::class); // Assuming you have a 'users' table
     }
+
+    public function sections()
+    {
+        // Define the relationship with the User model
+        return $this->hasMany(Section::class); // Assuming you have a 'users' table
+    }
 }

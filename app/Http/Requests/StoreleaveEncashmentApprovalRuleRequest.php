@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Storeapplied_leaveRequest extends FormRequest
+class StoreleaveEncashmentApprovalRuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,12 @@ class Storeapplied_leaveRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id'], // Add validation for user_id
-            'leave_id' => ['required', 'exists:leavetypes,id'],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date', 'after:start_date'],
-            'number_of_days' => ['required', 'numeric', 'min:0.5'], // Add validation for no_of_days
-            'remark' => ['nullable', 'string'],
+            'For' => 'required|string|max:255',
+            'type_id' => 'required|integer|exists:encashments,id',
+            'RuleName' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'status' => 'required|boolean'
         ];
     }
 }

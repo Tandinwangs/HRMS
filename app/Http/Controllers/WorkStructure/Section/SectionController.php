@@ -101,7 +101,7 @@ class SectionController extends Controller
 
     public function getSectionsByDepartment($department)
     {
-        $sections = Section::where('department', $department)->get();
+        $sections = Section::where('department_id', $department)->get();
         return response()->json(['sections' => $sections]); 
     }
 

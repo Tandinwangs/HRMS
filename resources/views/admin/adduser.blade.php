@@ -2,6 +2,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @section('content')
     <div class="container">
+    @if(session('success'))
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -244,6 +250,7 @@
                     option.value = section.id;
                     option.textContent = section.name;
                     sectionDropdown.appendChild(option);
+                    console.log("Section", option);
                 });
             })
             .catch(function(error) {

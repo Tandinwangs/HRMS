@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatesectionRequest extends FormRequest
+class UpdateleaveEncashmentApprovalRuleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,9 +22,7 @@ class UpdatesectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'department_id' => 'required|integer|exists:departments,id',
-            'status' => 'required|boolean',
+            //
         ];
     }
 }

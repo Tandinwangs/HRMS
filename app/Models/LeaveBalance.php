@@ -11,7 +11,8 @@ class LeaveBalance extends Model
 
     protected $fillable = [
         'user_id',
-        'earned_leave_balance'
+        'earned_leave_balance',
+        'casual_leave_balance'
     ];
 
 

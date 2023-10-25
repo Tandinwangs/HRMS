@@ -9,6 +9,8 @@ use App\Models\approval_condition;
 use App\Models\level;
 use App\Models\User;
 use App\Models\Designation;
+use App\Models\LeaveBalance;
+use App\Models\leave_rule;
 use App\Http\Requests\StoreleaveApprovalRequest;
 use App\Http\Requests\UpdateleaveApprovalRequest;
 use Illuminate\Http\Request;
@@ -31,7 +33,7 @@ class LeaveApprovalController extends Controller
             // Query leave applications for the section head's section
             $leaveApplications = Applied_Leave::whereHas('user.section', function ($query) use ($sectionHeadId) {
                 $query->where('id', $sectionHeadId);
-            })->get();
+            })->where('level1', 'pending')->get();
     
     
             return view('leave.approval.leaveApproval', compact('leaveApplications'));
@@ -135,6 +137,8 @@ class LeaveApprovalController extends Controller
                 'level1' => 'approved',
                 'status' => 'approved',
             ]);
+
+            $this->fetchCasualLeaveBalance($leave_id,  $userID);
 
             $content = "The leave you have applied for has been approved.";
         
@@ -282,6 +286,44 @@ class LeaveApprovalController extends Controller
             'status' => 'cancelled',
         ]);
         return redirect()->back()->with('success', 'Leave application cancelled successfully.');
+    }
+
+    private function fetchCasualLeaveBalance($leave_id,  $userID)
+    {
+        $user = User::where('id', $userID)->first();
+        $totalAppliedDays = applied_leave::where('user_id', $userID)
+        ->where('leave_id', $leave_id)
+        ->where('status', 'approved')
+        ->sum('number_of_days');
+
+        // 2. Find the leave duration from the leave_rules table for the specified leave type
+        $leaveRule = leave_rule::where('leave_id', $leave_id)
+        ->where('grade_id', $user->grade_id)
+        ->first();
+
+        if (!$leaveRule) {
+            return redirect()->back()->with('error', 'Leave rule not found');
+        }
+
+        $leaveDuration = $leaveRule->duration;
+
+        // 3. Calculate the leave balance by subtracting the applied days from the leave duration
+        $leaveBalanceNow = $leaveDuration - $totalAppliedDays;
+
+        $leaveBalanceRecord = LeaveBalance::where('user_id', $userID)
+        ->first();
+
+        if ($leaveBalanceRecord) {
+            // Update the existing leave balance record
+            $leaveBalanceRecord->casual_leave_balance = $leaveBalanceNow;
+            $leaveBalanceRecord->save();
+        } else {
+            // Create a new leave balance record if it doesn't exist
+            LeaveBalance::create([
+                'user_id' => $userID, 
+                'casual_leave_balance' => $leaveBalanceNow,
+            ]);
+        }
     }
     
 }

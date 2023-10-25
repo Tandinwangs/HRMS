@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->boolean('status')->default(true);
-            $table->foreignId('department_id')->constrained('departments');
-            $table->timestamps();
+        Schema::table('leave_balances', function (Blueprint $table) {
+            $table->decimal('casual_leave_balance')->default(0.0);
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::table('leave_balances', function (Blueprint $table) {
+            $table->dropColumn('casual_leave_balance');
+        });
     }
 };
