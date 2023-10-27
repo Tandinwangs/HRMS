@@ -11,7 +11,7 @@ class UpdateleaveEncashmentApprovalConditionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class UpdateleaveEncashmentApprovalConditionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'approval_type' => 'required|in:Hierarchy,Single User,Auto Approval',
+            'hierarchy_id' => $this->input('approval_type') === 'Hierarchy' ? 'required|integer' : 'nullable',
+            'employee_id' => $this->input('approval_type') === 'Single User' ? 'required|integer' : 'nullable',
+            'MaxLevel' => $this->input('approval_type') === 'Hierarchy' ? 'required|string' : 'nullable',
+            'AutoApproval' => $this->input('approval_type') === 'Auto Approval' ? 'boolean' : 'nullable',
         ];
     }
 }

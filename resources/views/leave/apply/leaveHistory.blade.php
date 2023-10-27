@@ -201,30 +201,35 @@
             
                 <!-- Modal Body -->
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('applyleave.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('encashment.store') }}" enctype="multipart/form-data">
                         @csrf
                             <div class="form-group">
                                 <input type="hidden" id="user_id" name="user_id" class="form-control" value="{{ auth()->user()->id }}" required readonly>
                             </div>  
-
                             <div class="form-group">
-                                <label for="leave_balance">Total leave for Encashment</label>
-                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" value="{{$encash_balance->earned_leave_balance}}" readonly required>
+                                <label >Total leave for Encashment</label>
+                                <input type="text" class="form-control" value="{{$encash_balance->earned_leave_balance}}" readonly required>
+                                @error('number_of_days')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                             <div class="form-group">
-                                <label for="leave_balance">Leave Eligible for Encashment</label>
-                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" value="{{$earnedLeaveRecord->min_balance}}" readonly required>
+                                <label>Leave Eligible for Encashment</label>
+                                <input type="text"  class="form-control" value="{{$earnedLeaveRecord->min_balance}}" readonly required>
                             </div>
 
                             <div class="form-group">
-                                <label for="leave_balance">Leave Apply for Encashment</label>
-                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" value="{{$earnedLeaveRecord->max_balance}}" readonly required>
+                                <label for="number_of_days">Leave Apply for Encashment</label>
+                                <input type="text" class="form-control" id="number_of_days" name="number_of_days" value="{{$earnedLeaveRecord->max_balance}}" readonly required>
                             </div>
 
                             <div class="form-group">
-                                <label for="leave_balance">Encashment Amount</label>
-                                <input type="text" id="leave_balance" name="leave_balance" class="form-control" readonly required>
+                                <label for="amount">Encashment Amount</label>
+                                <input type="text" id="amount" name="amount" class="form-control" value="28000" readonly required>
+                                @error('amount')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
 
                         <!-- Modal Footer -->

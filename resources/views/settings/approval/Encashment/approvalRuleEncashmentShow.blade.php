@@ -121,7 +121,7 @@
                 @endif
                 <td>    
                 <a href="{{ route('formula.createForEncashmentApprovalCondition', $approval_condition->id)}}" class="btn btn-primary btn-sm">Add Formula</a>
-                <a href="{{ route('approval_condition.edit', $approval_condition->id)}}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{{ route('encashment_approval_condition.edit', $approval_condition->id)}}" class="btn btn-primary btn-sm">Edit</a>
                 </td> <!-- Action column, you can add actions here -->
             </tr>
         @endforeach

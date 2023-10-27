@@ -24,6 +24,8 @@ use App\Http\Controllers\Settings\Approval\ApprovalConditionController;
 use App\Http\Controllers\Settings\Approval\Encashment\LeaveEncashmentApprovalRuleController;
 use App\Http\Controllers\Settings\Approval\Encashment\LeaveEncashmentApprovalConditionController;
 use App\Http\Controllers\Settings\Formula\Encashment\LeaveEncashmentFormulaController;
+use App\Http\Controllers\Encashment\Apply\AppliedEncashmentController;
+use App\Http\Controllers\Encashment\Approval\EncashmenApprovalController;
 use App\Http\Controllers\Settings\Formula\FormulaController;
 use App\Http\Controllers\Leave\Type\LeavetypeController;
 use App\Http\Controllers\Leave\Policy\LeavePolicyController;
@@ -159,7 +161,7 @@ Route::namespace('Settings')->group(function () {
     Route::patch('/approval/{approvalRule}', [ApprovalRuleController::class, 'update'])->name('approval.update');
     Route::get('/fetch-types/{for}', [ApprovalRuleController::class, 'fetchTypes'])->name('fetch-types');
 
-    Route::get('/approvalEncashment', [LeaveEncashmentApprovalRuleController::class, 'index'])->name('encashment_approval.index');
+    Route::get('/approvalEncashment', [LeaveEncashmentApprovalRuleController::class, 'index'])->name('encashment_approvalRule.index');
     Route::post('/encashmentApprovalRule', [LeaveEncashmentApprovalRuleController::class, 'store'])->name('approval.encashment.store');
     Route::get('/approvalEncashment/{leaveEncashmentApprovalRule}', [LeaveEncashmentApprovalRuleController::class, 'show'])->name('approval_encashment.show');
 
@@ -170,11 +172,15 @@ Route::namespace('Settings')->group(function () {
 
     Route::get('/encashmenCondition/{encashment_approval_rule_id}', [LeaveEncashmentApprovalConditionController::class, 'create'])->name('encashment_condition.create');
     Route::post('/encashmenCondition', [LeaveEncashmentApprovalConditionController::class, 'store'])->name('encashment_condition.store');
+    Route::get('/encashment_approval_condition/{leaveEncashmentApprovalCondition}/edit', [LeaveEncashmentApprovalConditionController::class, 'edit'])->name('encashment_approval_condition.edit');    
+    Route::patch('/encashment_condition/{leaveEncashmentApprovalCondition}', [LeaveEncashmentApprovalConditionController::class, 'update'])->name('encashment_condition.update');
+    
     Route::get('/formula/create-for-encashment-approval-condition/{encashmentApprovalConditionId}', [LeaveEncashmentFormulaController::class, 'createForEncashmentApprovalCondition'])
     ->name('formula.createForEncashmentApprovalCondition');
     Route::post('/formulaEncashment', [LeaveEncashmentFormulaController::class, 'store'])->name('encashment_formula.store');
     Route::delete('/encashment-formuala/{leaveEncashmentFormula}', [LeaveEncashmentFormulaController::class, 'destroy'])->name('encashment_formula.delete');
 
+ 
     Route::get('/formula/create-for-approval-condition/{approvalConditionId}', [FormulaController::class, 'createForApprovalCondition'])
     ->name('formula.createForApprovalCondition');
     
@@ -226,6 +232,17 @@ Route::namespace('Leave')->group(function () {
 
 Route::namespace('NoDue')->group(function () {
     Route::get('/nodue',[NoDueRequestController::class, 'index'])->name('nodue.index');
+    Route::post('/nodue', [NoDueRequestController::class, 'create'])->name('nodue.create');
+    Route::get('nodueApproval', [NoDueRequestApprovalController::class, 'index'])->name('nodueapproval.index');
+    Route::get('/approve/{id}', [NoDueRequestApprovalController::class, 'approve'])->name('nodue.approve');
+});
+
+Route::namespace('Encashment')->group(function () {
+    Route::post('/leave-encashment', [AppliedEncashmentController::class, 'store'])->name('encashment.store');
+    Route::post('/encashment-approval/{id}', [EncashmenApprovalController::class, 'approveEncashment'])->name('encashment.approve');
+    Route::post('/encashment-decline/{id}', [EncashmenApprovalController::class, 'declineEncashment'])->name('encashment.decline');
+
+    Route::get('/encashmentApproval',[EncashmenApprovalController::class, 'index'])->name('encashment_approval.index');
     Route::post('/nodue', [NoDueRequestController::class, 'create'])->name('nodue.create');
     Route::get('nodueApproval', [NoDueRequestApprovalController::class, 'index'])->name('nodueapproval.index');
     Route::get('/approve/{id}', [NoDueRequestApprovalController::class, 'approve'])->name('nodue.approve');

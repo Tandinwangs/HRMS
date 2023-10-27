@@ -91,6 +91,7 @@
                                         <a class="dropdown-item" href="{{ route('leavepolicy.index') }}">{{ __('Policy') }}</a>
                                         <a class="dropdown-item" href="{{ route('leave.history') }}">{{ __('Apply') }}</a>
                                         <a class="dropdown-item" href="{{ route('leaveApproval.index')}}">Approval</a>
+                                        <a class="dropdown-item" href="{{ route('encashment_approval.index')}}">Encashment Approval</a>
                                     </div>
                             </div>
                                 <!-- Add this code to your HTML template where you want the dropdown to appear -->

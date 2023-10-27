@@ -7,6 +7,7 @@ use App\Models\leaveEncashmentApprovalCondition;
 use App\Http\Requests\StoreleaveEncashmentApprovalConditionRequest;
 use App\Http\Requests\UpdateleaveEncashmentApprovalConditionRequest;
 use App\Models\User;
+use App\Models\leaveEncashmentFormula;
 use App\Models\hierarchy;
 
 class LeaveEncashmentApprovalConditionController extends Controller
@@ -55,9 +56,9 @@ class LeaveEncashmentApprovalConditionController extends Controller
     {
         $hierarchies = hierarchy::all();
         $users = User::all();
-        $condtion_id = $approval_condition->id;
-        $formula = Formula::where('condition_id', $condtion_id)->get();
-        return view('settings.approval.conditionEdit', compact('approval_condition', 'formula', 'hierarchies', 'users'));
+        $condtion_id = $leaveEncashmentApprovalCondition->id;
+        $formula = leaveEncashmentFormula::where('encashment_condition_id', $condtion_id)->get();
+        return view('settings.approval.Encashment.conditionEncashmentEdit', compact('leaveEncashmentApprovalCondition', 'formula', 'hierarchies', 'users'));
     }
 
     /**
@@ -65,7 +66,8 @@ class LeaveEncashmentApprovalConditionController extends Controller
      */
     public function update(UpdateleaveEncashmentApprovalConditionRequest $request, leaveEncashmentApprovalCondition $leaveEncashmentApprovalCondition)
     {
-        //
+        $leaveEncashmentApprovalCondition->update($request->validated());
+        return redirect()->back()->with('success', 'Condition Updated successfully!!');
     }
 
     /**
