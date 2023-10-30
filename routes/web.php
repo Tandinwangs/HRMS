@@ -215,10 +215,10 @@ Route::namespace('Leave')->group(function () {
     Route::get('/saveNow/{leave_id}', [LeaveYearendProcessingController::class, 'saveNow'])->name('saveNow');
     Route::get('/viewSummary/{leave_id}', [LeaveYearendProcessingController::class, 'leavePolicyView'])->name('leavePolicy.view');
 
-    Route::get('/leaveHistory', [AppliedLeaveController::class, 'index'])->name('leave.history');
-    Route::get('/fetch-leave-balance/{leaveTypeId}', [AppliedLeaveController::class, 'fetchLeaveBalance'])->name('fetch.leave.balance');
-    Route::get('/apply-leave', [AppliedLeaveController::class, 'create'])->name('leaveapply.create');
-    Route::post('/apply-leave', [AppliedLeaveController::class, 'store'])->name('applyleave.store');
+    Route::get('/leaveHistory', [AppliedLeaveController::class, 'index'])->name('leave.history')->middleware('auth');;
+    Route::get('/fetch-leave-balance/{leaveTypeId}', [AppliedLeaveController::class, 'fetchLeaveBalance'])->name('fetch.leave.balance')->middleware('auth');;
+    Route::get('/apply-leave', [AppliedLeaveController::class, 'create'])->name('leaveapply.create')->middleware('auth');;
+    Route::post('/apply-leave', [AppliedLeaveController::class, 'store'])->name('applyleave.store')->middleware('auth');;
     Route::get('/fetch-include-weekends/{leaveTypeId}', [AppliedLeaveController::class, 'fetchIncludeWeekends'])->name('fetch-include-weekends');
     Route::get('/fetch-include-public-holidays/{leaveTypeId}', [AppliedLeaveController::class, 'fetchIncludePublicHolidays'])->name('fetch-include-public-holidays');
     Route::get('/fetch-can-be-half-day/{leaveTypeId}', [AppliedLeaveController::class, 'fetchCanBeHalfDay'])->name('fetch-can-be-half-day');
@@ -239,13 +239,13 @@ Route::namespace('NoDue')->group(function () {
 
 Route::namespace('Encashment')->group(function () {
     Route::post('/leave-encashment', [AppliedEncashmentController::class, 'store'])->name('encashment.store');
-    Route::post('/encashment-approval/{id}', [EncashmenApprovalController::class, 'approveEncashment'])->name('encashment.approve');
-    Route::post('/encashment-decline/{id}', [EncashmenApprovalController::class, 'declineEncashment'])->name('encashment.decline');
+    Route::post('/encashment-approval/{id}', [EncashmenApprovalController::class, 'approveEncashment'])->name('encashment.approve')->middleware('auth');
+    Route::post('/encashment-decline/{id}', [EncashmenApprovalController::class, 'declineEncashment'])->name('encashment.decline')->middleware('auth');
 
-    Route::get('/encashmentApproval',[EncashmenApprovalController::class, 'index'])->name('encashment_approval.index');
-    Route::post('/nodue', [NoDueRequestController::class, 'create'])->name('nodue.create');
-    Route::get('nodueApproval', [NoDueRequestApprovalController::class, 'index'])->name('nodueapproval.index');
-    Route::get('/approve/{id}', [NoDueRequestApprovalController::class, 'approve'])->name('nodue.approve');
+    Route::get('/encashmentApproval',[EncashmenApprovalController::class, 'index'])->name('encashment_approval.index')->middleware('auth');;
+    Route::post('/nodue', [NoDueRequestController::class, 'create'])->name('nodue.create')->middleware('auth');
+    Route::get('nodueApproval', [NoDueRequestApprovalController::class, 'index'])->name('nodueapproval.index')->middleware('auth');
+    Route::get('/approve/{id}', [NoDueRequestApprovalController::class, 'approve'])->name('nodue.approve')->middleware('auth');
 });
 
 

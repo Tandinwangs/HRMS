@@ -10,6 +10,7 @@ use App\Models\leaveEncashmentApprovalCondition;
 use App\Models\level;
 use App\Models\User;
 use App\Models\Designation;
+use App\Models\leaveBalance;
 use App\Http\Requests\StoreEncashmenApprovalRequest;
 use App\Http\Requests\UpdateEncashmenApprovalRequest;
 use Illuminate\Http\Request;
@@ -22,8 +23,12 @@ class EncashmenApprovalController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
     public function index()
     {
+
+        $this->middleware('auth');
         $leaveEncashmentApprovalCondition = leaveEncashmentApprovalCondition::first();
 
         $designationId = auth()->user()->designation_id;
@@ -129,7 +134,15 @@ class EncashmenApprovalController extends Controller
         $userID = $encashmentApplication->user_id;
         $user = User::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
+        $leaveBalance = leaveBalance::where('user_id', $userID)->first();
+        $earnedleaveBalance = $leaveBalance->earned_leave_balance;
+        $appliedEncashmentDays = $encashmentApplication->number_of_days;
+        $newEarnedLeaveBalance = $leaveBalance->earned_leave_balance - $appliedEncashmentDays;
 
+        $leaveBalance->update([
+            'earned_leave_balance' => $newEarnedLeaveBalance,
+        ]);
+        
         $approvalType = leaveEncashmentApprovalCondition::first();
         $hierarchy_id = $approvalType->hierarchy_id;
 
